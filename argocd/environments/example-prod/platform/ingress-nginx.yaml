@@ -1,0 +1,12 @@
+app: ingress-nginx
+namespace: ingress-nginx
+project: platform
+
+repoURL: https://kubernetes.github.io/ingress-nginx
+chart: ingress-nginx
+targetRevision: 4.15.1
+
+autoSync: true
+valueFiles:
+  - argocd/values/common/platform/ingress-nginx.yaml
+  - argocd/values/example-prod/platform/ingress-nginx.yaml

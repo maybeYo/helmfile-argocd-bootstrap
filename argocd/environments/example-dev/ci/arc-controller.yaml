@@ -1,0 +1,11 @@
+# OCI chart: repoURL without oci://, registry declared in Argo CD
+# (configs.repositories in helmfile/values/common/argocd.yaml.gotmpl).
+app: arc-controller
+namespace: arc-systems
+project: platform
+
+repoURL: ghcr.io/actions/actions-runner-controller-charts
+chart: gha-runner-scale-set-controller
+targetRevision: 0.14.2
+
+autoSync: true

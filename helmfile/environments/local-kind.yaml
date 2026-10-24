@@ -1,0 +1,16 @@
+# helmfile -e local-kind
+# A kind cluster created with `kind create cluster` (context: kind-kind).
+
+gitops:
+  # Fork this repo? Change this URL. Argo CD pulls Application definitions from it.
+  repoURL: https://github.com/maybeYo/helmfile-argocd-bootstrap.git
+  revision: main
+
+secrets:
+  enabled: false  # no SOPS needed for the local quickstart
+  backend: age    # age | kms
+
+aws:
+  enabled: false
+  region: ""
+  repoServerRoleArn: ""

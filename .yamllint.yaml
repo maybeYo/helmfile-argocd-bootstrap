@@ -1,0 +1,17 @@
+extends: default
+
+ignore: |
+  *.gotmpl
+  charts/*/templates/
+  .cr-release-packages/
+
+rules:
+  line-length: disable
+  document-start: disable
+  comments-indentation: disable
+  comments:
+    min-spaces-from-content: 1
+  truthy:
+    check-keys: false
+  indentation:
+    indent-sequences: consistent

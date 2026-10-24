@@ -1,0 +1,15 @@
+app: kube-prometheus-stack
+namespace: monitoring
+project: platform
+
+repoURL: https://prometheus-community.github.io/helm-charts
+chart: kube-prometheus-stack
+targetRevision: 87.16.1
+
+autoSync: true
+valueFiles:
+  - argocd/values/common/platform/kube-prometheus-stack.yaml
+  - argocd/values/example-dev/platform/kube-prometheus-stack.yaml
+  # SOPS-encrypted values (e.g. grafana.adminPassword) decrypt transparently in
+  # repo-server once docs/secrets.md is set up. Plain path, no secrets:// prefix.
+  # - argocd/secrets/example-dev/platform/kube-prometheus-stack.yaml

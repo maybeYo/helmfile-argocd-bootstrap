@@ -1,0 +1,11 @@
+app: aws-load-balancer-controller
+namespace: kube-system
+project: platform
+
+repoURL: https://aws.github.io/eks-charts
+chart: aws-load-balancer-controller
+targetRevision: 3.4.2
+
+autoSync: true
+valueFiles:
+  - argocd/values/common/aws/aws-load-balancer-controller.yaml

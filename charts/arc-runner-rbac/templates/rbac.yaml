@@ -1,0 +1,27 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: arc-runner-helm-list
+  labels:
+    app.kubernetes.io/name: arc-runner-rbac
+rules:
+  - apiGroups: [""]
+    resources: ["secrets", "namespaces", "nodes", "services"]
+    verbs: ["get", "list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: arc-runner-helm-list
+  labels:
+    app.kubernetes.io/name: arc-runner-rbac
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: arc-runner-helm-list
+subjects:
+{{- range .Values.serviceAccounts }}
+  - kind: ServiceAccount
+    name: {{ . }}
+    namespace: {{ $.Values.namespace }}
+{{- end }}

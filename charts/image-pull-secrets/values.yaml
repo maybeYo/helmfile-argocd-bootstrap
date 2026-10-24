@@ -1,0 +1,15 @@
+# One Secret per key. Each Secret can carry several registries in its
+# .dockerconfigjson. Put the real values in a SOPS-encrypted file.
+registries: {}
+#  ghcr-pull:
+#    - url: https://ghcr.io
+#      username: my-user
+#      password: ghp_xxx
+#  dockerhub-pull:
+#    - url: https://index.docker.io/v1/
+#      username: my-user
+#      password: dckr_pat_xxx
+
+# Extra labels / annotations applied to every Secret.
+labels: {}
+annotations: {}

@@ -1,0 +1,8 @@
+# Replace placeholders. The controller's ServiceAccount needs an IRSA role
+# (or Pod Identity) with the AWS Load Balancer Controller IAM policy.
+clusterName: <CLUSTER_NAME>
+region: <AWS_REGION>
+vpcId: <VPC_ID>
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT_ID>:role/<CLUSTER_NAME>-aws-load-balancer-controller

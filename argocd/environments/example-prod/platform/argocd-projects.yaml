@@ -1,0 +1,13 @@
+# Creates the AppProjects (`platform`, `apps`) every other Application here refers to.
+# Lives in the built-in `default` project so it can be synced before the others exist.
+app: argocd-projects
+namespace: argocd
+project: default
+
+repoURL: https://argoproj.github.io/argo-helm
+chart: argocd-apps
+targetRevision: 2.0.5
+
+autoSync: true
+valueFiles:
+  - argocd/values/common/platform/argocd-projects.yaml

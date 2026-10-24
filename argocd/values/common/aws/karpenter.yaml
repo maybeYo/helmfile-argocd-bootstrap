@@ -1,0 +1,17 @@
+# Replace placeholders. NodePools / EC2NodeClasses are not part of this chart;
+# add them as a separate Application (e.g. a chart directory under charts/).
+settings:
+  clusterName: <CLUSTER_NAME>
+  interruptionQueue: <CLUSTER_NAME>
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT_ID>:role/<CLUSTER_NAME>-karpenter-controller
+controller:
+  env:
+    # IMDS is often unreachable from pods (hop limit 1); set the region explicitly.
+    - name: AWS_REGION
+      value: <AWS_REGION>
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi

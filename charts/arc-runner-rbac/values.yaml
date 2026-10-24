@@ -1,0 +1,16 @@
+# Namespace the runner scale sets live in.
+namespace: arc-runners
+
+# Runner ServiceAccounts that get cluster-wide get/list on
+# secrets, namespaces, nodes and services (what `helm list -A` needs).
+# ARC names the default SA "<scale-set-release>-gha-rs-no-permission".
+serviceAccounts:
+  - arc-runner-set-gha-rs-no-permission
+
+# Bind the built-in `admin` ClusterRole inside specific namespaces so a runner
+# can deploy there without any cluster-scoped write access.
+namespaceRoles: []
+#  - namespace: my-app
+#    createNamespace: true
+#    serviceAccounts:
+#      - arc-runner-set-gha-rs-no-permission

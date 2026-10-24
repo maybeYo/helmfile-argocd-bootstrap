@@ -1,0 +1,19 @@
+apiVersion: v2
+name: generic-app
+description: >-
+  Opinionated but app-agnostic chart for a stateless HTTP workload: Deployment,
+  Service, optional Ingress / HTTPRoute, HPA, ConfigMap and Secret with
+  checksum-based rollouts. Intended to be referenced from Argo CD via chartPath.
+type: application
+version: 0.1.0
+# appVersion is intentionally unset: image.tag is required per release.
+keywords:
+  - deployment
+  - generic
+  - gitops
+home: https://github.com/maybeYo/helmfile-argocd-bootstrap
+sources:
+  - https://github.com/maybeYo/helmfile-argocd-bootstrap/tree/main/charts/generic-app
+maintainers:
+  - name: maybeYo
+    url: https://github.com/maybeYo

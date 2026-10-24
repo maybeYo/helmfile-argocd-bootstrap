@@ -1,0 +1,17 @@
+apiVersion: v2
+name: arc-runner-rbac
+description: >-
+  RBAC for GitHub Actions Runner Controller (ARC) runner ServiceAccounts:
+  cluster-wide read of a few core resources (enough for `helm list -A`) plus
+  optional per-namespace admin bindings for deploy jobs.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - github-actions
+  - arc
+  - rbac
+home: https://github.com/maybeYo/helmfile-argocd-bootstrap
+maintainers:
+  - name: maybeYo
+    url: https://github.com/maybeYo

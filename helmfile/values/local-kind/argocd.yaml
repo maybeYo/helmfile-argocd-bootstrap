@@ -1,0 +1,5 @@
+# Local kind cluster: plain HTTP, reach the UI with
+#   kubectl -n argocd port-forward svc/argocd-server 8080:80
+configs:
+  params:
+    server.insecure: true

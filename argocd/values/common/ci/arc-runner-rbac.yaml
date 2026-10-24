@@ -1,0 +1,4 @@
+namespace: arc-runners
+serviceAccounts:
+  - arc-runner-set-gha-rs-no-permission
+namespaceRoles: []

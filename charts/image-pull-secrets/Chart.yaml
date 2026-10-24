@@ -1,0 +1,16 @@
+apiVersion: v2
+name: image-pull-secrets
+description: >-
+  Renders one kubernetes.io/dockerconfigjson Secret per entry in `registries`,
+  each able to hold credentials for several registries. Pair it with a
+  SOPS-encrypted values file.
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - imagePullSecrets
+  - docker-registry
+home: https://github.com/maybeYo/helmfile-argocd-bootstrap
+maintainers:
+  - name: maybeYo
+    url: https://github.com/maybeYo

@@ -1,0 +1,14 @@
+replicaCount: 2
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: hello.example.com
+      paths:
+        - path: /
+          pathType: Prefix

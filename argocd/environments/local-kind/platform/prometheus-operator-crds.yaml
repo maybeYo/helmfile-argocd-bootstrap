@@ -1,0 +1,11 @@
+# CRDs first, stack second (stack has crds.enabled=false).
+# ServerSideApply is on by default: these CRDs exceed the 256KB annotation limit otherwise.
+app: prometheus-operator-crds
+namespace: monitoring
+project: platform
+
+repoURL: https://prometheus-community.github.io/helm-charts
+chart: prometheus-operator-crds
+targetRevision: 28.0.1
+
+autoSync: true

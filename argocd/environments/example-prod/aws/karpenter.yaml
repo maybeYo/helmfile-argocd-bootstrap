@@ -1,0 +1,12 @@
+# OCI chart from ECR Public: repoURL without oci://.
+app: karpenter
+namespace: karpenter
+project: platform
+
+repoURL: public.ecr.aws/karpenter
+chart: karpenter
+targetRevision: 1.14.0
+
+autoSync: true
+valueFiles:
+  - argocd/values/common/aws/karpenter.yaml

@@ -1,0 +1,18 @@
+# gha-runner-scale-set. Workflows use `runs-on: <Application name>` (arc-runner-set).
+# https://docs.github.com/en/actions/tutorials/use-actions-runner-controller/get-started
+
+# Repository, organisation or enterprise URL.
+githubConfigUrl: https://github.com/<your-org>
+
+minRunners: 0
+maxRunners: 3
+
+# Credentials. Either reference a pre-created Secret (shown) or put
+# githubConfigSecret.github_token / github_app_* in a SOPS-encrypted values file
+# and add it to valueFiles in the Application definition. See docs/github-actions-runners.md.
+githubConfigSecret: arc-github-config
+
+# <controller Application name>-gha-rs-controller
+controllerServiceAccount:
+  namespace: arc-systems
+  name: arc-controller-gha-rs-controller

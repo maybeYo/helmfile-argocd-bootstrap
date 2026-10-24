@@ -1,0 +1,55 @@
+# argocd-apps chart: `projects` is a MAP keyed by project name, not a list.
+projects:
+  platform:
+    namespace: argocd
+    description: Cluster platform components (ingress, certificates, monitoring, autoscaling)
+    finalizers:
+      - resources-finalizer.argocd.argoproj.io
+    sourceRepos:
+      - "*"
+    destinations:
+      - namespace: "*"
+        server: https://kubernetes.default.svc
+    clusterResourceWhitelist:
+      - group: "*"
+        kind: "*"
+
+  apps:
+    namespace: argocd
+    description: Workloads. Namespaced resources only (plus Namespace for CreateNamespace=true).
+    finalizers:
+      - resources-finalizer.argocd.argoproj.io
+    sourceRepos:
+      - "*"
+    destinations:
+      - namespace: "*"
+        server: https://kubernetes.default.svc
+    clusterResourceWhitelist:
+      - group: ""
+        kind: Namespace
+    # Project roles mirror the global roles in helmfile/values/common/argocd.yaml.gotmpl.
+    roles:
+      - name: readonly
+        description: view-only in project apps
+        policies:
+          - p, proj:apps:readonly, applications, get, apps/*, allow
+          - p, proj:apps:readonly, logs, get, apps/*, allow
+        groups:
+          - apps-readonly
+      - name: sync
+        description: view + sync in project apps
+        policies:
+          - p, proj:apps:sync, applications, get, apps/*, allow
+          - p, proj:apps:sync, applications, sync, apps/*, allow
+          - p, proj:apps:sync, logs, get, apps/*, allow
+        groups:
+          - apps-sync
+      - name: admin
+        description: manage applications in project apps
+        policies:
+          - p, proj:apps:admin, applications, *, apps/*, allow
+          - p, proj:apps:admin, applicationsets, *, apps/*, allow
+          - p, proj:apps:admin, logs, get, apps/*, allow
+          - p, proj:apps:admin, exec, create, apps/*, allow
+        groups:
+          - apps-admin

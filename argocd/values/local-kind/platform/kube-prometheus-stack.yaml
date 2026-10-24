@@ -1,0 +1,15 @@
+# Keep the stack small on a laptop.
+alertmanager:
+  enabled: false
+prometheus:
+  prometheusSpec:
+    retention: 2d
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+grafana:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi

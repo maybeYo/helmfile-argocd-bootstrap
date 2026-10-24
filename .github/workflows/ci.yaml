@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint charts and YAML
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: azure/setup-helm@v4
+
+      - name: helm lint
+        run: make lint-charts
+
+      - name: helm template (smoke)
+        run: |
+          helm template hello charts/generic-app --set image.tag=ci >/dev/null
+          helm template pull charts/image-pull-secrets \
+            --set 'registries.test[0].url=https://ghcr.io' \
+            --set 'registries.test[0].username=u' \
+            --set 'registries.test[0].password=p' >/dev/null
+          helm template rbac charts/arc-runner-rbac >/dev/null
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - run: pip install yamllint
+      - run: make lint-yaml
+
+      - name: secrets/ must be encrypted
+        run: make check-secrets
+
+  helmfile:
+    name: helmfile template (${{ matrix.env }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        env: [local-kind, example-dev, example-prod]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: helmfile/helmfile-action@v2
+        with:
+          helmfile-workdirectory: helmfile
+          helm-plugins: https://github.com/databus23/helm-diff
+          helmfile-args: >-
+            -e ${{ matrix.env }} template
+            --state-values-set secrets.enabled=false
+
+  gitleaks:
+    name: Secret scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

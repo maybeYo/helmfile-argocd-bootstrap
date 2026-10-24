@@ -1,0 +1,19 @@
+.DS_Store
+Thumbs.db
+
+# Decrypted SOPS output (helm-secrets writes <file>.dec)
+*.dec
+*.dec.yaml
+
+# age private keys
+key.txt
+*.agekey
+
+# Helm packaging output
+*.tgz
+charts/*/charts/
+.cr-release-packages/
+
+# Editors
+.idea/
+.vscode/

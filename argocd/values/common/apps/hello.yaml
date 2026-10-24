@@ -1,0 +1,25 @@
+# charts/generic-app values for the demo workload.
+image:
+  repository: nginxinc/nginx-unprivileged
+  tag: "1.27"
+containerPort: 8080
+readinessProbe:
+  httpGet:
+    path: /
+    port: http
+livenessProbe:
+  httpGet:
+    path: /
+    port: http
+resources:
+  requests:
+    cpu: 10m
+    memory: 32Mi
+  limits:
+    memory: 64Mi
+podSecurityContext:
+  runAsNonRoot: true
+securityContext:
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop: [ALL]

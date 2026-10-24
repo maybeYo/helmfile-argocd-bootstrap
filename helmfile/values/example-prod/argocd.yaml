@@ -1,0 +1,8 @@
+# Production overrides. Keep anything sensitive (repo credentials, account
+# passwords) in helmfile/secrets/example-prod/argocd.yaml instead.
+controller:
+  replicas: 1
+repoServer:
+  replicas: 2
+server:
+  replicas: 2

@@ -1,0 +1,14 @@
+# Needs arc-controller's CRDs; Argo CD retries until they exist.
+app: arc-runner-set
+namespace: arc-runners
+project: platform
+
+repoURL: ghcr.io/actions/actions-runner-controller-charts
+chart: gha-runner-scale-set
+targetRevision: 0.14.2
+
+autoSync: true
+valueFiles:
+  - argocd/values/common/ci/arc-runner-set.yaml
+  # githubConfigSecret inline, SOPS-encrypted (docs/github-actions-runners.md):
+  # - argocd/secrets/example-dev/ci/arc-runner-set.yaml

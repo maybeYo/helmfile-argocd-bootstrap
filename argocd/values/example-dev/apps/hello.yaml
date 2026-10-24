@@ -1,0 +1,9 @@
+replicaCount: 1
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: hello.dev.example.com
+      paths:
+        - path: /
+          pathType: Prefix

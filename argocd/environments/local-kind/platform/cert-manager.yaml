@@ -1,0 +1,11 @@
+app: cert-manager
+namespace: cert-manager
+project: platform
+
+repoURL: https://charts.jetstack.io
+chart: cert-manager
+targetRevision: 1.21.1
+
+autoSync: true
+valueFiles:
+  - argocd/values/common/platform/cert-manager.yaml

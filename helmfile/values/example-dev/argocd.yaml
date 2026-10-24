@@ -1,0 +1,11 @@
+# Non-production overrides. Example: expose the UI through an Ingress.
+# global:
+#   domain: argocd.dev.example.com
+# server:
+#   ingress:
+#     enabled: true
+#     ingressClassName: nginx
+#     annotations:
+#       cert-manager.io/cluster-issuer: letsencrypt
+#     tls: true
+{}

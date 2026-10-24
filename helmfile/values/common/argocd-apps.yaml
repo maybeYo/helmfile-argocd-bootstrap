@@ -1,0 +1,78 @@
+# Root ApplicationSet.
+#
+# `generators` is intentionally empty here: helmfile injects the git files
+# generator (repo URL, revision, environment) at apply time. See helmfile.yaml.gotmpl.
+#
+# Each file matched by the generator (argocd/environments/<env>/<group>/<name>.yaml)
+# becomes one Application. Supported keys are documented in README.md
+# ("Application definition").
+applicationsets:
+  root:
+    namespace: argocd
+    goTemplate: true
+    generators: []
+    template:
+      metadata:
+        name: "{{ .app }}"
+        namespace: argocd
+        labels:
+          app.kubernetes.io/managed-by: root-applicationset
+      spec:
+        project: '{{ .project | default "default" }}'
+        destination:
+          server: '{{ .cluster | default "https://kubernetes.default.svc" }}'
+          namespace: "{{ .namespace }}"
+    # Anything conditional or non-string (booleans, lists) has to live in
+    # templatePatch: the CRD validates `template` before rendering.
+    templatePatch: |
+      {{- if .cascadeDelete }}
+      metadata:
+        finalizers:
+          - resources-finalizer.argocd.argoproj.io
+      {{- end }}
+      spec:
+        syncPolicy:
+          {{- if .autoSync }}
+          automated:
+            prune: true
+            selfHeal: true
+          {{- end }}
+          syncOptions:
+            - ServerSideApply=true
+            - CreateNamespace=true
+            {{- range .syncOptions }}
+            - {{ . | quote }}
+            {{- end }}
+        sources:
+          # Source 1: the chart. Either a Helm repository / OCI chart (`chart`)
+          # or a chart directory in a git repo (`chartPath`, defaults to this repo).
+          - repoURL: {{ .repoURL | default .values.repoURL | quote }}
+            {{- if .chart }}
+            chart: {{ .chart | quote }}
+            targetRevision: {{ .targetRevision | default "*" | quote }}
+            {{- else }}
+            path: {{ .chartPath | quote }}
+            targetRevision: {{ .targetRevision | default .values.revision | quote }}
+            {{- end }}
+            helm:
+              releaseName: {{ .releaseName | default .app | quote }}
+              {{- if .kubeVersion }}
+              kubeVersion: {{ .kubeVersion | quote }}
+              {{- end }}
+              {{- if .valueFiles }}
+              valueFiles:
+              {{- range .valueFiles }}
+                - {{ printf "$values/%s" (trimPrefix "secrets://" .) | quote }}
+              {{- end }}
+              {{- end }}
+              {{- if .valuesInline }}
+              valuesObject:
+                {{- .valuesInline | toYaml | nindent 16 }}
+              {{- end }}
+          {{- if .valueFiles }}
+          # Source 2: this repo, referenced as $values so valueFiles are
+          # repo-root-relative regardless of where the chart comes from.
+          - repoURL: {{ .values.repoURL | quote }}
+            targetRevision: {{ .values.revision | quote }}
+            ref: values
+          {{- end }}

@@ -1,0 +1,4 @@
+# CRDs are installed by the separate prometheus-operator-crds Application
+# (large CRDs need ServerSideApply, which the root ApplicationSet enables).
+crds:
+  enabled: false

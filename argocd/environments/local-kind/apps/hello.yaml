@@ -1,0 +1,13 @@
+# Demo workload from the in-repo chart. chartPath = directory in the GitOps repo;
+# repoURL defaults to the GitOps repo itself, targetRevision to its revision.
+app: hello
+namespace: hello
+project: apps
+
+chartPath: charts/generic-app
+
+autoSync: true
+cascadeDelete: true   # deleting this file removes the deployed resources too
+valueFiles:
+  - argocd/values/common/apps/hello.yaml
+  - argocd/values/local-kind/apps/hello.yaml

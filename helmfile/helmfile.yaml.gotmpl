@@ -1,0 +1,77 @@
+# Helmfile does exactly one job here: bootstrap Argo CD and the root ApplicationSet.
+# Everything else is deployed by Argo CD from argocd/environments/<env>/.
+#
+#   helmfile -e <env> apply -l name=argocd
+#   helmfile -e <env> apply -l name=argocd-apps
+#
+# <env> must be a key under `environments:` and have a file in environments/.
+# Values files missing for an environment are skipped (missingFileHandler: Warn),
+# so a new environment only needs environments/<env>.yaml to get started.
+#
+# `repositories` and `environments` must live in the first YAML document (above ---).
+
+repositories:
+  - name: argocd
+    url: https://argoproj.github.io/argo-helm
+
+environments:
+  local-kind:
+    kubeContext: kind-kind
+    values:
+      - environments/local-kind.yaml
+  example-dev:
+    values:
+      - environments/example-dev.yaml
+  example-prod:
+    values:
+      - environments/example-prod.yaml
+
+---
+
+missingFileHandler: Warn
+
+helmDefaults:
+  wait: true
+  timeout: 600
+  createNamespace: true
+
+releases:
+  # Argo CD itself. repo-server is extended with helm-secrets + SOPS so that
+  # Applications can reference encrypted values files (docs/secrets.md).
+  - name: argocd
+    namespace: argocd
+    chart: argocd/argo-cd
+    version: 10.1.3
+    values:
+      - values/common/argocd.yaml.gotmpl
+      - values/{{ .Environment.Name }}/argocd.yaml
+{{- if .Values | get "secrets.enabled" false }}
+    # Encrypted with SOPS; decrypted on apply by the helm-secrets plugin.
+    secrets:
+      - secrets/{{ .Environment.Name }}/argocd.yaml
+{{- end }}
+
+  # Root ApplicationSet: scans argocd/environments/<env>/*/*.yaml in the GitOps
+  # repository and creates one Argo CD Application per file.
+  # The generator is injected here so the repo URL / revision / environment
+  # name are never hardcoded in a values file.
+  - name: argocd-apps
+    namespace: argocd
+    chart: argocd/argocd-apps
+    version: 2.0.5
+    needs:
+      - argocd/argocd
+    values:
+      - values/common/argocd-apps.yaml
+      - applicationsets:
+          root:
+            generators:
+              - git:
+                  repoURL: {{ .Values.gitops.repoURL | quote }}
+                  revision: {{ .Values.gitops.revision | quote }}
+                  files:
+                    - path: argocd/environments/{{ .Environment.Name }}/*/*.yaml
+                  # Exposed to templates as {{ "{{ .values.repoURL }}" }} etc.
+                  values:
+                    repoURL: {{ .Values.gitops.repoURL | quote }}
+                    revision: {{ .Values.gitops.revision | quote }}

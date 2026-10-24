@@ -1,0 +1,45 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "helmfile": {
+    "managerFilePatterns": ["/(^|/)helmfile\\.yaml\\.gotmpl$/"]
+  },
+  "helm-values": {
+    "managerFilePatterns": [
+      "/^argocd/values/.+\\.ya?ml$/",
+      "/^helmfile/values/.+\\.ya?ml(\\.gotmpl)?$/"
+    ]
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Helm charts referenced from Argo CD Application definitions",
+      "managerFilePatterns": ["/^argocd/environments/.+\\.ya?ml$/"],
+      "matchStrings": [
+        "repoURL:\\s*(?<registryUrl>https?://\\S+)\\s*\\n\\s*chart:\\s*(?<depName>\\S+)\\s*\\n\\s*targetRevision:\\s*\"?(?<currentValue>[^\"\\s]+)\"?"
+      ],
+      "datasourceTemplate": "helm"
+    },
+    {
+      "customType": "regex",
+      "description": "Tool versions downloaded by the Argo CD repo-server init container",
+      "managerFilePatterns": ["/^helmfile/values/common/argocd\\.yaml\\.gotmpl$/"],
+      "matchStrings": [
+        "name: HELM_SECRETS_VERSION\\s*\\n\\s*value: \"(?<currentValue>[^\"]+)\"",
+        "name: SOPS_VERSION\\s*\\n\\s*value: \"(?<currentValue>[^\"]+)\"",
+        "name: AGE_VERSION\\s*\\n\\s*value: \"(?<currentValue>[^\"]+)\"",
+        "name: VALS_VERSION\\s*\\n\\s*value: \"(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "{{#if (containsString matchString 'HELM_SECRETS')}}jkroepke/helm-secrets{{else if (containsString matchString 'SOPS')}}getsops/sops{{else if (containsString matchString 'AGE')}}FiloSottile/age{{else}}helmfile/vals{{/if}}",
+      "datasourceTemplate": "github-releases",
+      "extractVersionTemplate": "^v?(?<version>.*)$"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["helmfile", "custom.regex"],
+      "groupName": "helm charts",
+      "schedule": ["before 6am on monday"]
+    }
+  ]
+}

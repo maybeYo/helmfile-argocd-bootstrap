@@ -1,0 +1,9 @@
+app: arc-runner-rbac
+namespace: arc-runners
+project: platform
+
+chartPath: charts/arc-runner-rbac
+
+autoSync: true
+valueFiles:
+  - argocd/values/common/ci/arc-runner-rbac.yaml

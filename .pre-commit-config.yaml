@@ -1,0 +1,33 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-merge-conflict
+      - id: detect-private-key
+
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.35.1
+    hooks:
+      - id: yamllint
+        args: [-c, .yamllint.yaml]
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.18.4
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: sops-encrypted
+        name: secrets/ files are SOPS-encrypted
+        entry: scripts/check-sops-encrypted.sh
+        language: script
+        pass_filenames: false
+      - id: helm-lint
+        name: helm lint charts
+        entry: make lint-charts
+        language: system
+        files: ^charts/
+        pass_filenames: false
