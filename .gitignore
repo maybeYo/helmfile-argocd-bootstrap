@@ -12,7 +12,6 @@ key.txt
 # Helm packaging output
 *.tgz
 charts/*/charts/
-.cr-release-packages/
 
 # Editors
 .idea/

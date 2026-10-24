@@ -3,7 +3,6 @@ extends: default
 ignore: |
   *.gotmpl
   charts/*/templates/
-  .cr-release-packages/
 
 rules:
   line-length: disable

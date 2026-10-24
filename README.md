@@ -158,9 +158,8 @@ make argocd-ui             port-forward the UI to :8080
 
 ## Charts
 
-Charts in `charts/` are consumed directly from this repository via `chartPath`.
-They can optionally be published to GHCR as OCI artifacts by running the
-*Release charts* workflow manually (Actions tab).
+Charts in `charts/` are consumed directly from this repository via `chartPath`;
+nothing is published to a registry.
 
 ## Contributing
 
