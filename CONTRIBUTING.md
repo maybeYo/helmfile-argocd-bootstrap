@@ -18,7 +18,7 @@ pre-commit install # optional: run the same checks on every commit
 - **Values live next to the environment.** Shared values in
   `argocd/values/common/<group>/`, overrides in `argocd/values/<env>/<group>/`.
 - **Charts are versioned.** Bump `version` in `Chart.yaml` for any change under
-  `charts/<chart>/`; CI publishes new versions to GHCR.
+  `charts/<chart>/`; the *Release charts* workflow can publish them to GHCR on demand.
 - **Nothing company-specific.** Use `example.com`, `<ACCOUNT_ID>`-style
   placeholders and generic names. CI runs gitleaks on every push.
 - **Secrets are encrypted or they are templates.** Any YAML under a `secrets/`

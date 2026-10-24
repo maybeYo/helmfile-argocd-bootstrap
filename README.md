@@ -158,11 +158,9 @@ make argocd-ui             port-forward the UI to :8080
 
 ## Charts
 
-Charts in `charts/` are published to GHCR on every version bump:
-
-```bash
-helm pull oci://ghcr.io/maybeyo/charts/generic-app --version 0.1.0
-```
+Charts in `charts/` are consumed directly from this repository via `chartPath`.
+They can optionally be published to GHCR as OCI artifacts by running the
+*Release charts* workflow manually (Actions tab).
 
 ## Contributing
 
