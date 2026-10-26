@@ -146,15 +146,15 @@ make argocd-ui             port-forward the UI to :8080
 
 ## Troubleshooting
 
-| Symptom                                           | Cause / fix                                                                              |
-| ------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| Application never appears                         | file pushed? path matches `environments/<env>/*/*.yaml`? Argo CD can reach the repo?    |
-| `Add the .gotmpl file extension`                  | helmfile needs `helmfile.yaml.gotmpl` for templating                                     |
-| AppProject chart fails to parse                   | `projects` must be a map keyed by name, not a list                                       |
-| CRD `metadata.annotations: Too long`              | needs Server-Side Apply; the root ApplicationSet enables it, check for an override       |
-| OCI chart `not found`                             | `repoURL` without `oci://`, and the registry must be in Argo CD `configs.repositories`   |
-| encrypted values not decrypting in Argo CD        | `helm-secrets-age-key` Secret missing, or IRSA role lacks `kms:Decrypt`; check repo-server logs |
-| `argocd-apps` Server-Side Apply conflict          | `kubectl -n argocd delete applicationset root` then re-apply `argocd-apps`              |
+| Symptom                                    | Cause / fix                                                                                     |
+| ------------------------------------------ | ----------------------------------------------------------------------------------------------- |
+| Application never appears                  | file pushed? path matches `environments/<env>/*/*.yaml`? Argo CD can reach the repo?            |
+| `Add the .gotmpl file extension`           | helmfile needs `helmfile.yaml.gotmpl` for templating                                            |
+| AppProject chart fails to parse            | `projects` must be a map keyed by name, not a list                                              |
+| CRD `metadata.annotations: Too long`       | needs Server-Side Apply; the root ApplicationSet enables it, check for an override              |
+| OCI chart `not found`                      | `repoURL` without `oci://`, and the registry must be in Argo CD `configs.repositories`          |
+| encrypted values not decrypting in Argo CD | `helm-secrets-age-key` Secret missing, or IRSA role lacks `kms:Decrypt`; check repo-server logs |
+| `argocd-apps` Server-Side Apply conflict   | `kubectl -n argocd delete applicationset root` then re-apply `argocd-apps`                      |
 
 ## Charts
 
