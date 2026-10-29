@@ -97,11 +97,11 @@ valueFiles:
 
 ## 环境
 
-| 环境           | 用途            | 密钥           | 额外组件                                   |
-| -------------- | --------------- | -------------- | ------------------------------------------ |
-| `local-kind`   | 本机快速体验    | 关闭           | cert-manager、监控、示例应用               |
-| `example-dev`  | 共享非生产集群  | SOPS + age     | + ingress-nginx、GitHub Actions runner     |
-| `example-prod` | EKS             | SOPS + AWS KMS | + AWS Load Balancer Controller、Karpenter  |
+| 环境           | 用途           | 密钥           | 额外组件                                  |
+| -------------- | -------------- | -------------- | ----------------------------------------- |
+| `local-kind`   | 本机快速体验   | 关闭           | cert-manager、监控、示例应用              |
+| `example-dev`  | 共享非生产集群 | SOPS + age     | + ingress-nginx、GitHub Actions runner    |
+| `example-prod` | EKS            | SOPS + AWS KMS | + AWS Load Balancer Controller、Karpenter |
 
 新增环境：创建 `helmfile/environments/<env>.yaml`，在 `helmfile.yaml.gotmpl` 的 `environments:` 下注册，再填充 `argocd/environments/<env>/`。
 
@@ -120,15 +120,15 @@ CI 和 pre-commit 会拒绝任何 `secrets/` 目录下未加密的 YAML。
 
 ## 排障
 
-| 现象                                   | 原因 / 处理                                                                     |
-| -------------------------------------- | ------------------------------------------------------------------------------- |
-| Application 不出现                     | 推送了吗？路径符合 `environments/<env>/*/*.yaml`？Argo CD 能访问仓库？          |
-| `Add the .gotmpl file extension`       | helmfile 模板必须叫 `helmfile.yaml.gotmpl`                                      |
-| AppProject chart 解析失败              | `projects` 必须是按名字为 key 的 map，不是 list                                 |
-| CRD `metadata.annotations: Too long`   | 需要 Server-Side Apply；根 ApplicationSet 默认已开，检查是否被覆盖              |
-| OCI chart `not found`                  | `repoURL` 不带 `oci://`，且 registry 要在 Argo CD `configs.repositories` 中声明 |
-| 加密 values 在 Argo CD 里不解密        | 缺 `helm-secrets-age-key` Secret，或 IRSA 角色没有 `kms:Decrypt`；看 repo-server 日志 |
-| `argocd-apps` Server-Side Apply 冲突   | `kubectl -n argocd delete applicationset root` 后重新 apply `argocd-apps`       |
+| 现象                                 | 原因 / 处理                                                                           |
+| ------------------------------------ | ------------------------------------------------------------------------------------- |
+| Application 不出现                   | 推送了吗？路径符合 `environments/<env>/*/*.yaml`？Argo CD 能访问仓库？                |
+| `Add the .gotmpl file extension`     | helmfile 模板必须叫 `helmfile.yaml.gotmpl`                                            |
+| AppProject chart 解析失败            | `projects` 必须是按名字为 key 的 map，不是 list                                       |
+| CRD `metadata.annotations: Too long` | 需要 Server-Side Apply；根 ApplicationSet 默认已开，检查是否被覆盖                    |
+| OCI chart `not found`                | `repoURL` 不带 `oci://`，且 registry 要在 Argo CD `configs.repositories` 中声明       |
+| 加密 values 在 Argo CD 里不解密      | 缺 `helm-secrets-age-key` Secret，或 IRSA 角色没有 `kms:Decrypt`；看 repo-server 日志 |
+| `argocd-apps` Server-Side Apply 冲突 | `kubectl -n argocd delete applicationset root` 后重新 apply `argocd-apps`             |
 
 ## 许可
 
